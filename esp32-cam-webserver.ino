@@ -371,6 +371,26 @@ void setup() {
         digitalWrite(LED_PIN, LED_ON);
     #endif
 
+
+    // Initialise and set the lamp
+    if (lampVal != -1) {
+        ledcSetup(lampChannel, pwmfreq, pwmresolution);  // configure LED PWM channel
+        setLamp(lampVal);                                // set default value
+        ledcAttachPin(LAMP_PIN, lampChannel);            // attach the GPIO pin to the channel
+    } else {
+        Serial.println("No lamp, or lamp disabled in config");
+    }
+    for(int i=0; i<100; i++)
+    {
+      setLamp(i);
+      delay(10);
+    }
+    for(int i=100; i>0; i--)
+    {
+      setLamp(i);
+      delay(10);
+    }
+    
     // Create camera config structure; and populate with hardware and other defaults 
     camera_config_t config;
     config.ledc_channel = LEDC_CHANNEL_0;
@@ -507,15 +527,6 @@ void setup() {
     * Camera setup complete; initialise the rest of the hardware.
     */
 
-    // Initialise and set the lamp
-    if (lampVal != -1) {
-        ledcSetup(lampChannel, pwmfreq, pwmresolution);  // configure LED PWM channel
-        setLamp(lampVal);                                // set default value
-        ledcAttachPin(LAMP_PIN, lampChannel);            // attach the GPIO pin to the channel
-    } else {
-        Serial.println("No lamp, or lamp disabled in config");
-    }
-
     // Having got this far; start Wifi and loop until we are connected or have started an AccessPoint
     while ((WiFi.status() != WL_CONNECTED) && !accesspoint)  {
         WifiSetup();
@@ -541,6 +552,17 @@ void setup() {
     sketchSize = ESP.getSketchSize();
     sketchSpace = ESP.getFreeSketchSpace();
     sketchMD5 = ESP.getSketchMD5();
+
+    for(int i=0; i<100; i++)
+    {
+      setLamp(i);
+      delay(10);
+    }
+    for(int i=100; i>0; i--)
+    {
+      setLamp(i);
+      delay(10);
+    }
 }
 
 void loop() {
